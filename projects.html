@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iBwrnn Projects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0b0b0b, #1a1a1a);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            animation: fadeIn 1.5s ease;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #e50914;
+            letter-spacing: 3px;
+            text-shadow: 0 3px 10px rgba(229, 9, 20, 0.7);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0;
+            height: 2px;
+            background: #e50914;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        nav ul li a:hover {
+            color: #e50914;
+        }
+
+        .projects {
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .projects h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .project-card {
+            background: #141414;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .project-card h3 {
+            padding: 15px;
+            color: #fff;
+            text-align: left;
+        }
+
+        .project-card p {
+            padding: 0 15px 15px;
+            color: #b3b3b3;
+            text-align: left;
+        }
+
+        .project-card a {
+            display: block;
+            padding: 10px 15px;
+            background: #e50914;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 15px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .project-card a:hover {
+            background: #b20610;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #b3b3b3;
+        }
+
+        footer p {
+            font-size: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="container">
+        <h1>iBwrnn</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="projects">
+        <h2>Featured Projects</h2>
+        <div class="projects-grid" id="projects-container">
+            <!-- Projects will be dynamically loaded here -->
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 iBwrnn. Stay real, stay sharp, stay ahead.</p>
+    </footer>
+
+    <script>
+        const projectsContainer = document.getElementById('projects-container');
+
+        async function fetchProjects() {
+            try {
+                const response = await axios.get('https://api.github.com/users/oBwqrnDev/repos');
+                const projects = response.data;
+
+                projects.forEach(project => {
+                    const projectCard = document.createElement('div');
+                    projectCard.classList.add('project-card');
+
+                    projectCard.innerHTML = `
+                        <h3>${project.name}</h3>
+                        <p>${project.description || "No description available"}</p>
+                        <a href="${project.html_url}" target="_blank">View Project</a>
+                    `;
+
+                    projectsContainer.appendChild(projectCard);
+                });
+            } catch (error) {
+                projectsContainer.innerHTML = '<p>Failed to load projects. Please try again later.</p>';
+                console.error(error);
+            }
+        }
+
+        fetchProjects();
+    </script>
+</body>
+</html>
